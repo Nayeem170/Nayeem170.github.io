@@ -1,1 +1,98 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nayeem Bin Ahsan - Senior Software Engineer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="profile-image">
+                <img id="profile-img" src="" alt="Profile">
+            </div>
+            <h1 id="name" class="name"></h1>
+            <p id="title" class="title"></p>
+            
+            <div class="contact-info">
+                <a id="phone" href="" target="_blank" class="contact-item" data-tooltip="Call">
+                    <i class="fas fa-phone"></i>
+                </a>
+                <a id="email" href="" target="_blank" class="contact-item" data-tooltip="Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+                <a id="address" href="" target="_blank" class="contact-item" data-tooltip="Location">
+                    <i class="fas fa-map-marker-alt"></i>
+                </a>
+                <a id="linkedin" href="" target="_blank" class="contact-item" data-tooltip="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a id="github" href="" target="_blank" class="contact-item" data-tooltip="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Professional Summary -->
+        <section class="section">
+            <h2 class="section-title">
+                <i class="fas fa-user-tie"></i>
+                Professional Summary
+            </h2>
+            <div class="section-content">
+                <p id="summary"></p>
+            </div>
+        </section>
+
+        <!-- Technical Skills -->
+        <section class="section">
+            <h2 class="section-title">
+                <i class="fas fa-code"></i>
+                Technical Skills
+            </h2>
+            <div class="section-content">
+                <div id="skills" class="skill-grid"></div>
+            </div>
+        </section>
+
+        <!-- Experience -->
+        <section class="section">
+            <h2 class="section-title">
+                <i class="fas fa-briefcase"></i>
+                Experience
+            </h2>
+            <div id="experience" class="section-content"></div>
+        </section>
+
+        <!-- Education -->
+        <section class="section">
+            <h2 class="section-title">
+                <i class="fas fa-graduation-cap"></i>
+                Education
+            </h2>
+            <div id="education" class="section-content"></div>
+        </section>
+
+        <!-- Additional Information -->
+        <section class="section">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                Additional Information
+            </h2>
+            <div id="additional-info" class="section-content"></div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Nayeem Bin Ahsan. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
