@@ -13,10 +13,11 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     background: white;
     padding: 0;
+    width: 100%;
 }
 
 h1 {
