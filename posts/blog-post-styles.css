@@ -336,6 +336,56 @@ tr:nth-child(even) {
     margin: 0;
 }
 
+/* Filter Section Styles */
+.filter-section {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.filter-label {
+    font-weight: 700;
+    font-size: 1.05em;
+    color: #0f172a;
+    margin-bottom: 15px;
+}
+
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-tag {
+    background: white;
+    border: 2px solid #e2e8f0;
+    color: #334155;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.filter-tag:hover {
+    background: #334155;
+    color: white;
+    border-color: #334155;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(15, 23, 42, 0.15);
+}
+
+.filter-tag.active {
+    background: #334155;
+    color: white;
+    border-color: #334155;
+    box-shadow: 0 4px 8px rgba(15, 23, 42, 0.2);
+}
+
 .posts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -408,11 +458,14 @@ tr:nth-child(even) {
     font-size: 0.8em;
     font-weight: 500;
     transition: all 0.2s ease;
+    cursor: pointer;
 }
 
 .post-tag:hover {
     background: #334155;
     color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
 }
 
 .back-link {

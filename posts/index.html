@@ -12,8 +12,49 @@
             <h1>📝 Blog Posts</h1>
             <p>Thoughts, tutorials, and insights on software engineering</p>
         </div>
+
+        <div class="filter-section">
+            <div class="filter-label">Filter by tags:</div>
+            <div class="filter-tags" id="filter-tags">
+                <button class="filter-tag active" data-tag="all">All</button>
+                <button class="filter-tag" data-tag="IDisposable">IDisposable</button>
+                <button class="filter-tag" data-tag="Using Statement">Using Statement</button>
+                <button class="filter-tag" data-tag="Resource Management">Resource Management</button>
+                <button class="filter-tag" data-tag=".NET">.NET</button>
+                <button class="filter-tag" data-tag="Best Practices">Best Practices</button>
+                <button class="filter-tag" data-tag="Rate Limiting">Rate Limiting</button>
+                <button class="filter-tag" data-tag=".NET 8">.NET 8</button>
+                <button class="filter-tag" data-tag="Multi-Tenant">Multi-Tenant</button>
+                <button class="filter-tag" data-tag="E-Commerce">E-Commerce</button>
+                <button class="filter-tag" data-tag="API Security">API Security</button>
+                <button class="filter-tag" data-tag="API Design">API Design</button>
+                <button class="filter-tag" data-tag="C#">C#</button>
+            </div>
+        </div>
         
         <div class="posts-grid">
+            <a href="disposable-and-using-blog-post.html" class="post-card">
+                <h2>Mastering IDisposable and Using Statements in C#: A Complete Guide to Resource Management</h2>
+                <div class="post-meta">
+                    <div class="post-meta-item">
+                        <strong>📅 Published:</strong>
+                        <span>January 3, 2026</span>
+                    </div>
+                    <div class="post-meta-item">
+                        <strong>⏱️ Reading Time:</strong>
+                        <span>12 minutes</span>
+                    </div>
+                </div>
+                <div class="post-tags">
+                    <span class="post-tag">IDisposable</span>
+                    <span class="post-tag">Using Statement</span>
+                    <span class="post-tag">Resource Management</span>
+                    <span class="post-tag">.NET</span>
+                    <span class="post-tag">Best Practices</span>
+                </div>
+                <p class="post-excerpt">A comprehensive guide to mastering IDisposable and using statements in C#, covering proper resource management, best practices, common mistakes, and real-world examples for writing robust, exception-safe code.</p>
+            </a>
+
             <a href="rate-limiting-feature-blog-post.html" class="post-card">
                 <h2>Building a Robust API Rate Limiting System for Multi-Tenant E-Commerce Platform</h2>
                 <div class="post-meta">
@@ -41,5 +82,64 @@
             ← Back to Home
         </a>
     </div>
+
+    <script>
+        // Filter functionality for blog posts
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-tag');
+            const postCards = document.querySelectorAll('.post-card');
+            const postTags = document.querySelectorAll('.post-tag');
+
+            function filterPosts(selectedTag) {
+                // Remove active class from all filter buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Find and activate the matching filter button
+                const matchingButton = Array.from(filterButtons).find(btn => 
+                    btn.getAttribute('data-tag') === selectedTag
+                );
+                if (matchingButton) {
+                    matchingButton.classList.add('active');
+                }
+                
+                // Filter posts based on selected tag
+                postCards.forEach(card => {
+                    if (selectedTag === 'all') {
+                        card.style.display = 'block';
+                    } else {
+                        const cardTags = card.querySelectorAll('.post-tag');
+                        let hasTag = false;
+                        
+                        cardTags.forEach(tag => {
+                            if (tag.textContent.trim() === selectedTag) {
+                                hasTag = true;
+                            }
+                        });
+                        
+                        card.style.display = hasTag ? 'block' : 'none';
+                    }
+                });
+            }
+
+            // Filter button clicks
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const selectedTag = this.getAttribute('data-tag');
+                    filterPosts(selectedTag);
+                });
+            });
+
+            // Post tag clicks
+            postTags.forEach(tag => {
+                tag.style.cursor = 'pointer';
+                tag.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const selectedTag = this.textContent.trim();
+                    filterPosts(selectedTag);
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -8,6 +8,14 @@ const postsData = {
         "tags": "Rate Limiting, .NET 8, Multi-Tenant, E-Commerce, API Security",
         "readingTime": "15 minutes",
         "slug": "rate-limiting-feature-blog-post"
+    },
+    "disposable-and-using": {
+        "title": "Mastering IDisposable and Using Statements in C#: A Complete Guide to Resource Management",
+        "date": "January 3, 2026",
+        "category": "Engineering, C#",
+        "tags": "IDisposable, Using Statement, Resource Management, .NET, Best Practices",
+        "readingTime": "12 minutes",
+        "slug": "disposable-and-using-blog-post"
     }
 };
 
