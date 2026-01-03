@@ -26,6 +26,9 @@ $(document).ready(function() {
         $('.loading').remove();
     });
     
+    // Update page title
+    document.title = `${cvData.name} - ${cvData.title}`;
+    
     // Populate title and other info
     $('#title').text(cvData.title);
     $('#phone').attr('href', 'tel:' + cvData.contact.phone.replace(/\D/g, '')).attr('data-tooltip', cvData.contact.phone);
@@ -116,6 +119,10 @@ $(document).ready(function() {
         `;
         $('#additional-info').append(infoHTML);
     });
+    
+    // Populate footer copyright
+    const currentYear = new Date().getFullYear();
+    $('#footer-copyright').text(`&copy; ${currentYear} ${cvData.name}. All rights reserved.`);
     
     // Add fade-in animation to sections
     $('.section').hide().fadeIn(500);
