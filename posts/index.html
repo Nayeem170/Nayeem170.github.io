@@ -13,8 +13,11 @@
             <p>Thoughts, tutorials, and insights on software engineering</p>
         </div>
 
-        <div class="filter-section">
-            <div class="filter-label">Filter by tags</div>
+        <div class="filter-section" id="filter-section" style="display: none;">
+            <div class="filter-header">
+                <div class="filter-label">Filter by tags</div>
+                <button class="clear-filter" id="clear-filter">✕ Clear</button>
+            </div>
             <div class="filter-tags">
                 <button class="filter-tag active" data-tag="all">All</button>
                 <button class="filter-tag" data-tag="IDisposable">IDisposable</button>
@@ -86,6 +89,8 @@
     <script>
         // Filter functionality for blog posts
         document.addEventListener('DOMContentLoaded', function() {
+            const filterSection = document.getElementById('filter-section');
+            const clearButton = document.getElementById('clear-filter');
             const filterButtons = document.querySelectorAll('.filter-tag');
             const postCards = document.querySelectorAll('.post-card');
             const postTags = document.querySelectorAll('.post-tag');
@@ -129,15 +134,22 @@
                 });
             });
 
-            // Post tag clicks
+            // Post tag clicks - show filter section and filter by that tag
             postTags.forEach(tag => {
                 tag.style.cursor = 'pointer';
                 tag.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     const selectedTag = this.textContent.trim();
+                    filterSection.style.display = 'block';
                     filterPosts(selectedTag);
                 });
+            });
+
+            // Clear button - reset filter and hide filter section
+            clearButton.addEventListener('click', function() {
+                filterPosts('all');
+                filterSection.style.display = 'none';
             });
         });
     </script>
