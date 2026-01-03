@@ -778,7 +778,9 @@ tr:nth-child(even) {
     font-weight: 500;
     color: #0f172a;
     box-shadow: 0 2px 4px rgba(15, 23, 42, 0.1);
-    min-width: 400px;
+    min-width: 250px;
+    width: 100%;
+    max-width: 100%;
 }
 
 .flow-box.flow-success {
@@ -836,7 +838,9 @@ tr:nth-child(even) {
     text-align: center;
     font-size: 0.9em;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
-    min-width: 400px;
+    min-width: 250px;
+    width: 100%;
+    max-width: 100%;
 }
 
 .flow-branch-item.flow-error {
@@ -1374,13 +1378,15 @@ tr:nth-child(even) {
     }
 
     .flow-box {
-        min-width: auto;
-        padding: 12px 20px;
+        min-width: 0;
+        width: 100%;
+        padding: 12px 15px;
         font-size: 0.9em;
     }
 
     .flow-branch-item {
-        min-width: auto;
+        min-width: 0;
+        width: 100%;
         font-size: 0.85em;
         padding: 10px 15px;
     }
