@@ -356,6 +356,9 @@ tr:nth-child(even) {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .filter-tag {
@@ -369,6 +372,8 @@ tr:nth-child(even) {
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .filter-tag:hover {
