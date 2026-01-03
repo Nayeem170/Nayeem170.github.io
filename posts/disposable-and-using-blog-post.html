@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <script src="posts-data.js"></script>
     <script src="blog-post.js"></script>
 </head>
+
 <body>
     <div class="container">
         <div class="metadata">
@@ -20,9 +22,14 @@
 
         <h1>Mastering IDisposable and Using Statements in C#: A Complete Guide to Resource Management</h1>
 
-        <p>Proper resource management is essential for building reliable C# applications. The .NET framework provides two primary mechanisms for this: the <code>IDisposable</code> interface and the <code>using</code> statement. Understanding when and how to use these tools is crucial for preventing resource leaks and ensuring application stability.</p>
+        <p>Proper resource management is essential for building reliable C# applications. The .NET framework provides
+            two primary mechanisms for this: the <code>IDisposable</code> interface and the <code>using</code>
+            statement. Understanding when and how to use these tools is crucial for preventing resource leaks and
+            ensuring application stability.</p>
 
-        <p>This guide explains the key concepts behind resource management in C#, including the distinction between managed and unmanaged resources, when to implement IDisposable, and modern patterns for writing clean, exception-safe code.</p>
+        <p>This guide explains the key concepts behind resource management in C#, including the distinction between
+            managed and unmanaged resources, when to implement IDisposable, and modern patterns for writing clean,
+            exception-safe code.</p>
 
         <h2>🎯 The Real Story: Managed vs Unmanaged</h2>
 
@@ -61,12 +68,15 @@
                     <li>Window handles, bitmaps, graphics objects</li>
                     <li>Memory allocated outside .NET (via P/Invoke)</li>
                 </ul>
-                <p><strong>Action:</strong> <strong>MUST</strong> use <code>using</code> statement or call <code>Dispose()</code></p>
+                <p><strong>Action:</strong> <strong>MUST</strong> use <code>using</code> statement or call
+                    <code>Dispose()</code>
+                </p>
             </div>
         </div>
 
         <div class="alert alert-success">
-            <strong>Bottom Line:</strong> 90% of your code doesn't need disposal. Only use <code>using</code> when working with external resources (files, databases, networks, graphics).
+            <strong>Bottom Line:</strong> 90% of your code doesn't need disposal. Only use <code>using</code> when
+            working with external resources (files, databases, networks, graphics).
         </div>
 
         <p>The solution is proper resource management, and C# provides two key mechanisms:</p>
@@ -84,14 +94,16 @@
 
         <h2>🏗️ Understanding IDisposable</h2>
 
-        <p>The <code>IDisposable</code> interface is defined in the <code>System</code> namespace and contains a single method:</p>
+        <p>The <code>IDisposable</code> interface is defined in the <code>System</code> namespace and contains a single
+            method:</p>
 
         <pre><code>public interface IDisposable
 {
     void Dispose();
 }</code></pre>
 
-        <p>This method is your contract for releasing resources - whether managed or unmanaged. When implemented correctly, it ensures:</p>
+        <p>This method is your contract for releasing resources - whether managed or unmanaged. When implemented
+            correctly, it ensures:</p>
 
         <ul>
             <li>Unmanaged resources (file handles, network connections) are released</li>
@@ -104,7 +116,8 @@
         <p><strong>Use the <code>using</code> statement</strong> when working with existing disposable types:</p>
 
         <div class="alert alert-success">
-            <strong>Rule:</strong> If you're using a type from the .NET framework (or any library) that implements IDisposable, wrap it in a <code>using</code> statement.
+            <strong>Rule:</strong> If you're using a type from the .NET framework (or any library) that implements
+            IDisposable, wrap it in a <code>using</code> statement.
         </div>
 
         <pre><code>// ✅ Use USING when working with these types:
@@ -118,7 +131,8 @@ using var file = new FileStream("data.txt", FileMode.Open);
 
         <h2> The Using Statement</h2>
 
-        <p>The <code>using</code> statement is syntactic sugar that ensures <code>Dispose()</code> is called, even if an exception occurs:</p>
+        <p>The <code>using</code> statement is syntactic sugar that ensures <code>Dispose()</code> is called, even if an
+            exception occurs:</p>
 
         <pre><code>// Using statement syntax
 using (var stream = new FileStream("data.txt", FileMode.Open))
@@ -171,7 +185,8 @@ finally
         </table>
 
         <div class="alert alert-success">
-            <strong>Best Practice:</strong> Always use the <code>using</code> statement (or <code>await using</code> for async disposable objects) when working with disposable resources. It's exception-safe and more readable.
+            <strong>Best Practice:</strong> Always use the <code>using</code> statement (or <code>await using</code> for
+            async disposable objects) when working with disposable resources. It's exception-safe and more readable.
         </div>
 
         <h2>🔨 When Do You Need to Implement IDisposable?</h2>
@@ -204,7 +219,8 @@ public class FileProcessor
     }
 }</code></pre>
 
-        <p>In this example, <code>FileProcessor</code> uses <code>using</code> statements. Resources are created, used, and disposed in the same method. No need to implement IDisposable!</p>
+        <p>In this example, <code>FileProcessor</code> uses <code>using</code> statements. Resources are created, used,
+            and disposed in the same method. No need to implement IDisposable!</p>
 
         <h3>When You Actually Need IDisposable</h3>
 
@@ -234,7 +250,8 @@ public class FileLogger
     }
 }</code></pre>
 
-        <p>In this example, <code>FileLogger</code> keeps file resources open across multiple method calls. It must implement IDisposable to clean them up when the logger is no longer needed.</p>
+        <p>In this example, <code>FileLogger</code> keeps file resources open across multiple method calls. It must
+            implement IDisposable to clean them up when the logger is no longer needed.</p>
 
         <h3>What Doesn't Need IDisposable?</h3>
 
@@ -248,9 +265,11 @@ public class FileReader
     }
 }</code></pre>
 
-        <p>In this example, <code>FileReader</code> receives a <code>Stream</code> but doesn't own it. The caller is responsible for disposing it. No need to implement IDisposable.</p>
+        <p>In this example, <code>FileReader</code> receives a <code>Stream</code> but doesn't own it. The caller is
+            responsible for disposing it. No need to implement IDisposable.</p>
 
-        <p>For most application code, you'll just use the <code>using</code> statement with existing disposable types. The .NET framework already handles all the complex patterns internally.</p>
+        <p>For most application code, you'll just use the <code>using</code> statement with existing disposable types.
+            The .NET framework already handles all the complex patterns internally.</p>
 
         <h2>⚡ Quick Reference: When to Use What</h2>
 
@@ -300,15 +319,34 @@ var myObject = new MyClass(); // unless it holds IDisposable objects</code></pre
         </div>
 
         <div class="alert alert-success">
-            <strong>Key Takeaway:</strong> The key insight is knowing when you DON'T need to implement IDisposable. Focus your energy on the external resources that actually matter (files, databases, networks), and let .NET handle the rest.
+            <strong>Key Takeaway:</strong> The key insight is knowing when you DON'T need to implement IDisposable.
+            Focus your energy on external resources that actually matter (files, databases, networks), and let .NET
+            handle rest.
         </div>
 
-    <a href="index.html" class="back-to-home">← Back to Posts</a>
+        <div class="reference-section">
+            <h2>📚 References</h2>
+            <ul class="reference-list">
+                <li><a href="https://learn.microsoft.com/en-us/dotnet/api/system.idisposable" target="_blank"
+                        rel="noopener noreferrer">Microsoft Learn: IDisposable Interface</a></li>
+                <li><a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/using"
+                        target="_blank" rel="noopener noreferrer">Microsoft Learn: using Statement Reference</a></li>
+                <li><a href="https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-dispose"
+                        target="_blank" rel="noopener noreferrer">Microsoft Learn: Implementing a Dispose Method</a>
+                </li>
+                <li><a href="https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/unmanaged"
+                        target="_blank" rel="noopener noreferrer">Microsoft Learn: Cleaning up Unmanaged Resources</a>
+                </li>
+            </ul>
+        </div>
 
-    <div class="footer">
-        <p id="footer-copyright"></p>
-    </div>
+        <a href="index.html" class="back-to-home">← Back to Posts</a>
+
+        <div class="footer">
+            <p id="footer-copyright"></p>
+        </div>
     </div>
     </div>
 </body>
+
 </html>
