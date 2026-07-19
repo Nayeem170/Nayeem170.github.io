@@ -13,15 +13,23 @@ const cvData = {
         "github": "https://github.com/Nayeem170",
         "githubDisplay": "github.com/Nayeem170"
     },
-    "summary": "Senior Software Engineer with 8+ years of experience building scalable, cloud-native web applications. Strong focus on backend APIs and modern frontend frameworks. Expertise in .NET (C#), RESTful APIs, gRPC, and cloud-native architectures (AWS, Azure). Proven track record in delivering high-performance services and mentoring.",
+    "summary": "Senior Software Engineer with 8+ years of experience across backend and frontend. Works full-stack on .NET/C# services and React/Angular web apps, and has integrated Stripe and QuickBooks payments, OAuth and Firebase authentication, and real-time features using SignalR and WebSockets. Recent work also includes building LLM-driven products with Python/FastAPI and Svelte. Used to taking a feature from a rough wireframe through to release on my own.",
     "skills": [
         {
-            "category": "Backend & APIs",
-            "items": ".NET, C#, RESTful APIs, gRPC, SignalR"
+            "category": "Frontend",
+            "items": "React, Angular, TypeScript, JavaScript"
         },
         {
-            "category": "Frontend",
-            "items": "Angular, React, TypeScript, JavaScript"
+            "category": "Backend & APIs",
+            "items": ".NET (C#), Node.js/Express, RESTful APIs, gRPC, Clean Architecture"
+        },
+        {
+            "category": "Payments, Auth & Real-Time",
+            "items": "Stripe, QuickBooks, OAuth, Firebase Auth, Role-Based Access Control, SignalR, WebSockets"
+        },
+        {
+            "category": "AI & LLM",
+            "items": "LLM integration, FastAPI, Svelte, AI-assisted development"
         },
         {
             "category": "Cloud & DevOps",
@@ -29,15 +37,11 @@ const cvData = {
         },
         {
             "category": "Databases",
-            "items": "MSSQL, PostgreSQL, MySQL"
+            "items": "MSSQL, PostgreSQL, MySQL, DynamoDB"
         },
         {
             "category": "Testing",
             "items": "xUnit, Mocha, Jasmine"
-        },
-        {
-            "category": "Practices",
-            "items": "Full-Stack, Backend Architecture, System Design, Agile/Scrum"
         }
     ],
     "experience": [
@@ -47,7 +51,7 @@ const cvData = {
             "companyLink": "https://www.enosisbd.com/",
             "companyLogo": "https://www.enosisbd.com/wp-content/uploads/2020/07/enosis-logo.png",
             "date": "Nov 2019 – Present (6 yrs 8 mos)",
-            "summary": "Modernizing legacy systems and building scalable .NET backends (C#, REST, gRPC, SignalR), delivering real-time with strong ownership of code quality, integrations, and mentorship.",
+            "summary": "Modernizing legacy systems and building full-stack features across .NET backends (C#, REST, gRPC, SignalR) and Angular/React frontends, owning code quality, third-party integrations, and mentorship.",
             "projects": [
                 {
                     "name": "Warehouse Management",
@@ -55,7 +59,7 @@ const cvData = {
                 },
                 {
                     "name": "Work Order & Task Management",
-                    "description": "Led API migration from Perl to .NET 5, fixed critical issues, and delivered new features; contributed to Angular frontend with multilingual support, notifications, and Stripe/QuickBooks integrations."
+                    "description": "Migrated the API from Perl to .NET 5 and built out full-stack features on the Angular frontend, including multilingual support, in-app notifications, and Stripe and QuickBooks payment integration."
                 },
                 {
                     "name": "Resource Manager",
@@ -99,7 +103,7 @@ const cvData = {
             "companyLink": "",
             "companyLogo": "",
             "date": "March 2025 – Present (1 yr 4 mos)",
-            "summary": "Part-time backend and full-stack development work.",
+            "summary": "Part-time full-stack development work, including AI-driven features.",
             "projects": [
                 {
                     "name": "AI Website Builder",
@@ -107,7 +111,7 @@ const cvData = {
                 },
                 {
                     "name": "Multi-Tenant E-Commerce Platform",
-                    "description": "Built a multi-tenant e-commerce platform on .NET 8 (Clean Architecture, DynamoDB), implementing tenant isolation, Firebase/Google OAuth with role-based access control, dynamic product schemas, order processing with tax calculation, API keys with rate limiting, and SignalR real-time updates."
+                    "description": "Built a multi-tenant e-commerce platform on .NET 8 (Clean Architecture, DynamoDB) with Firebase/Google OAuth and role-based access control, order processing with tax calculation, API keys with rate limiting, and SignalR real-time updates."
                 }
             ]
         }
