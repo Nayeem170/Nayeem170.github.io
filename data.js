@@ -46,7 +46,7 @@ const cvData = {
             "company": "Enosis Solutions",
             "companyLink": "https://www.enosisbd.com/",
             "companyLogo": "https://www.enosisbd.com/wp-content/uploads/2020/07/enosis-logo.png",
-            "date": "Nov 2019 – Present (6 yrs)",
+            "date": "Nov 2019 – Present (6 yrs 8 mos)",
             "summary": "Modernizing legacy systems and building scalable .NET backends (C#, REST, gRPC, SignalR), delivering real-time with strong ownership of code quality, integrations, and mentorship.",
             "projects": [
                 {
@@ -64,6 +64,10 @@ const cvData = {
                 {
                     "name": "E-Learning Platform",
                     "description": "Supporting database migration from EF Core 2 to EF Core 9 to improve performance and maintainability."
+                },
+                {
+                    "name": "Background Job Runner",
+                    "description": "Developing a background job and scheduled task runner (an alternative to Hangfire) running on Kubernetes in production with Dapr for local microservices development."
                 }
             ]
         },
@@ -88,6 +92,32 @@ const cvData = {
                     "description": "Contributed to the migration from WebForms to ASP.NET Core MVC and implemented document workflow processes."
                 }
             ]
+        },
+        {
+            "position": "Freelance Software Engineer",
+            "company": "Confidential",
+            "companyLink": "",
+            "companyLogo": "",
+            "date": "Part-time",
+            "summary": "Part-time backend and full-stack development work.",
+            "projects": [
+                {
+                    "name": "AI Website Builder",
+                    "description": "Built an AI website generator on Open WebUI (Python/FastAPI, Svelte), delivering LLM-driven site generation with refinement, an image generation pipeline, and Cloudflare Pages deployment with custom domains and GitHub sync."
+                },
+                {
+                    "name": "Multi-Tenant E-Commerce Platform",
+                    "description": "Built a multi-tenant e-commerce platform on .NET 8 (Clean Architecture, DynamoDB), implementing tenant isolation, Firebase/Google OAuth with role-based access control, dynamic product schemas, order processing with tax calculation, API keys with rate limiting, and SignalR real-time updates."
+                }
+            ]
+        }
+    ],
+    "personalProjects": [
+        {
+            "name": "KoThok",
+            "icon": "book-reader",
+            "link": "https://github.com/Nayeem170/KoThok",
+            "description": "A custom e-reader for Kobo e-ink devices, written in Rust. Renders directly to the e-ink framebuffer with Bluetooth (A2DP) read-aloud audio via Microsoft Edge TTS, launched from NickelMenu. Built with a Slint UI, cross-compiled for ARMv7, and split into reusable crates (a Kobo device SDK and an Edge TTS client) published to crates.io."
         }
     ],
     "education": [

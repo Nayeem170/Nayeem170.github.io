@@ -56,9 +56,12 @@ $(document).ready(function() {
         var projectsHTML = '<div class="projects"><h4>Key Projects:</h4>';
         
         $.each(exp.projects, function(projIndex, project) {
+            var nameHTML = project.name
+                ? `<h5><i class="fas fa-folder"></i> ${project.name}</h5>`
+                : '';
             projectsHTML += `
                 <div class="project">
-                    <h5><i class="fas fa-folder"></i> ${project.name}</h5>
+                    ${nameHTML}
                     <p>${project.description}</p>
                 </div>
             `;
@@ -86,6 +89,21 @@ $(document).ready(function() {
             </div>
         `;
         $('#experience').append(experienceHTML);
+    });
+    
+    // Populate personal projects
+    $.each(cvData.personalProjects, function(index, project) {
+        var titleHTML = project.link 
+            ? `<a href="${project.link}" target="_blank" class="info-title"><i class="fas fa-${project.icon}"></i> ${project.name} <i class="fas fa-external-link-alt" style="font-size: 0.7em; margin-left: 8px;"></i></a>`
+            : `<h3><i class="fas fa-${project.icon}"></i> ${project.name}</h3>`;
+        
+        var projectHTML = `
+            <div class="additional-item">
+                ${titleHTML}
+                <p>${project.description}</p>
+            </div>
+        `;
+        $('#personal-projects').append(projectHTML);
     });
     
     // Populate education
