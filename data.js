@@ -95,10 +95,10 @@ const cvData = {
         },
         {
             "position": "Freelance Software Engineer",
-            "company": "Confidential",
+            "company": "CrovioTech",
             "companyLink": "",
             "companyLogo": "",
-            "date": "Part-time",
+            "date": "March 2025 – Present (1 yr 4 mos)",
             "summary": "Part-time backend and full-stack development work.",
             "projects": [
                 {
@@ -116,7 +116,7 @@ const cvData = {
         {
             "name": "KoThok",
             "icon": "book-reader",
-            "link": "https://github.com/Nayeem170/KoThok",
+            "link": "https://kothok.bitops.bd/",
             "description": "A custom e-reader for Kobo e-ink devices, written in Rust. Renders directly to the e-ink framebuffer with Bluetooth (A2DP) read-aloud audio via Microsoft Edge TTS, launched from NickelMenu. Built with a Slint UI, cross-compiled for ARMv7, and split into reusable crates (a Kobo device SDK and an Edge TTS client) published to crates.io."
         }
     ],
