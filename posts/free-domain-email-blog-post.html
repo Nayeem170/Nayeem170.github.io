@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Domain Email That Lands in the Inbox: Cloudflare, an SMTP Relay, and the Three DNS Records That Matter</title>
+    <meta name="description"
+        content="A $0/month email setup for a domain you own: Cloudflare Email Routing for inbound, a free SMTP relay for outbound, and the SPF, DKIM and DMARC records that decide whether your mail reaches the inbox or the spam folder.">
+    <link rel="stylesheet" href="blog-post-styles.css">
+    <script src="../data.js"></script>
+    <script src="posts-data.js"></script>
+    <script src="blog-post.js"></script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                fontFamily: "'Segoe UI', system-ui, sans-serif",
+                primaryColor: '#ffffff',
+                primaryTextColor: '#0f172a',
+                primaryBorderColor: '#334155',
+                lineColor: '#334155',
+                secondaryColor: '#f1f5f9',
+                tertiaryColor: '#f8fafc'
+            }
+        });
+    </script>
+    <style>
+        /* Mermaid diagrams reuse the .diagram frame used elsewhere on this site */
+        .diagram pre.mermaid {
+            background: transparent;
+            text-align: center;
+            font-family: inherit;
+        }
+
+        .diagram pre.mermaid svg {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="metadata">
+            <p><strong>Published:</strong> <span id="post-date"></span></p>
+            <p><strong>Category:</strong> <span id="post-category"></span></p>
+            <p><strong>Tags:</strong> <span id="post-tags"></span></p>
+            <p><strong>Reading Time:</strong> <span id="post-reading-time"></span></p>
+        </div>
+
+        <h1>Free Domain Email That Lands in the Inbox</h1>
+
+        <p>You own a domain but no mail server, no mailbox, and no budget. You want
+            <code>you@yourdomain.com</code> that receives mail and sends mail Gmail and Outlook don't quietly file
+            under spam. That is free, and it takes about an hour.
+        </p>
+
+        <div class="feature-list">
+            <div class="feature-item">
+                <h4>📋 What you need first</h4>
+                <p>A domain, and any email account you already use. That's the whole list.</p>
+            </div>
+            <div class="feature-item">
+                <h4>🎯 What you'll have at the end</h4>
+                <p>Mail to your domain arriving in your normal inbox, and replies going out as your domain with no
+                    "via gmail.com" tag attached.</p>
+            </div>
+        </div>
+
+        <p>I'll use <code>example.com</code> and <code>hello@example.com</code> throughout. Swap in your own.</p>
+
+        <h2>🚫 Why not just run a mail server?</h2>
+
+        <p>Receiving mail is easy. Sending it is hard, and the reason is reputation, not software.</p>
+
+        <p>Big providers keep a score on every server on the internet: has it sent mail before, does it send spam,
+            does it look real? A brand new $5 server scores badly on all three. It has no history, and it sits in a
+            block of addresses Microsoft and Google already distrust. So your first email to an Outlook.com address
+            goes to junk, and there is no support ticket that fixes it. Reputation is earned over months.</p>
+
+        <p>So don't fight it. Let someone else receive, let someone else's trusted servers send, and keep your domain
+            name on the front of both.</p>
+
+        <table>
+            <tr>
+                <th>Piece</th>
+                <th>Job</th>
+                <th>Cost</th>
+            </tr>
+            <tr>
+                <td>Cloudflare Email Routing</td>
+                <td>Takes mail sent to your domain, forwards it to a mailbox you have</td>
+                <td>Free</td>
+            </tr>
+            <tr>
+                <td>A mailbox you already have</td>
+                <td>Where you read and write</td>
+                <td>Free</td>
+            </tr>
+            <tr>
+                <td>Brevo, or another SMTP relay</td>
+                <td>Sends your outgoing mail from trusted servers, signed as your domain</td>
+                <td>Free to 300/day</td>
+            </tr>
+        </table>
+
+        <div class="diagram">
+            <pre class="mermaid">
+flowchart TD
+    subgraph inbound["Inbound"]
+        S["Someone emails<br/>hello@example.com"] -->|"MX lookup"| CF["Cloudflare<br/>Email Routing"]
+        CF -->|"forwards"| MB["Your mailbox"]
+    end
+    subgraph outbound["Outbound"]
+        MB2["Compose as<br/>hello@example.com"] -->|"SMTP 587 + TLS"| BV["Brevo relay"]
+        BV -->|"signed as example.com"| R["Recipient"]
+    end
+    MB -.->|"Send mail as"| MB2
+            </pre>
+        </div>
+
+        <p>There is no server anywhere in that picture. All you own is DNS, which is fine, because DNS is where email
+            identity actually lives.</p>
+
+        <h2>📥 Step 1: receiving mail</h2>
+
+        <p>Move your domain's nameservers to Cloudflare (the free plan is fine), then open your domain and click
+            <strong>Email → Email Routing → Get started</strong>.
+        </p>
+
+        <p>Cloudflare writes three MX records for you. An MX record is just a signpost in DNS saying "mail for this
+            domain goes here":</p>
+
+        <div class="code-block">
+            <pre><code>example.com.  MX  52  route1.mx.cloudflare.net.   ; priorities are generated per domain
+example.com.  MX  98  route2.mx.cloudflare.net.   ; and mean nothing - use your dashboard's,
+example.com.  MX  91  route3.mx.cloudflare.net.   ; not these</code></pre>
+        </div>
+
+        <p>Then go to <strong>Routes → Create address</strong>:</p>
+
+        <div class="code-block">
+            <pre><code>Custom address:  hello              -> becomes hello@example.com
+Action:          Send to an email
+Destination:     your-real-mailbox@gmail.com</code></pre>
+        </div>
+
+        <p>That box only wants the part before the <code>@</code>, because Cloudflare already knows the domain. Click
+            the verification link that lands in your mailbox and receiving is done, free, permanently.</p>
+
+        <div class="alert alert-info">
+            <strong>Picking the address:</strong> avoid <code>info@</code>, <code>admin@</code> and
+            <code>webmaster@</code>, which have been on spammers' scraped lists since the 90s. And create the two or
+            three addresses you actually use rather than a catch-all, or every random guess at your domain lands in
+            your inbox.
+        </div>
+
+        <p>What you don't get: no mailbox on the domain, no IMAP, no webmail, no sending, and messages above roughly
+            25 MB will bounce.</p>
+
+        <h2>📤 Step 2: getting permission to send</h2>
+
+        <p>Anyone can <em>type</em> <code>hello@example.com</code> in a From field. That is why receivers ignore it
+            and check who actually delivered the message instead. A server with no authority over your domain looks
+            exactly like forgery, because that is what forgery is.</p>
+
+        <p>So you need a service that sends from trusted servers <strong>and</strong> can prove it speaks for you.
+            Brevo's free tier does both: 300 emails a day, no card required.</p>
+
+        <p>Sign up, then <strong>Settings → Domains → Add domain</strong>. Brevo gives you DNS records to add:</p>
+
+        <div class="code-block">
+            <pre><code>; proves the domain is yours
+example.com.          TXT    "brevo-code:&lt;code&gt;"
+
+; the signing keys  (older accounts get mail._domainkey / mail2._domainkey)
+brevo1._domainkey     CNAME  b1.&lt;code&gt;.dkim.brevo.com.
+brevo2._domainkey     CNAME  b2.&lt;code&gt;.dkim.brevo.com.</code></pre>
+        </div>
+
+        <p>Add them in Cloudflare with the cloud icon <strong>grey</strong>, never orange. Then
+            <strong>Settings → SMTP &amp; API</strong> gives you the credentials your mail app needs:
+        </p>
+
+        <div class="code-block">
+            <pre><code>Server:    smtp-relay.brevo.com
+Port:      587
+Username:  &lt;code&gt;@smtp-brevo.com
+Password:  &lt;generated SMTP key&gt;</code></pre>
+        </div>
+
+        <div class="alert">
+            <strong>⚠️ That key is a password.</strong> Whoever holds it can send mail signed as your domain. Keep it
+            out of your git repo.
+        </div>
+
+        <h2>✉️ Step 3: sending from the mailbox you already use</h2>
+
+        <p>In Gmail: <strong>Settings → Accounts and Import → Send mail as → Add another email address</strong>.</p>
+
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Email address</td>
+                <td><code>hello@example.com</code></td>
+            </tr>
+            <tr>
+                <td>Treat as an alias</td>
+                <td><strong>unticked</strong></td>
+            </tr>
+            <tr>
+                <td>SMTP Server / Port</td>
+                <td><code>smtp-relay.brevo.com</code>, <code>587</code></td>
+            </tr>
+            <tr>
+                <td>Username / Password</td>
+                <td>your relay login and key</td>
+            </tr>
+            <tr>
+                <td>Security</td>
+                <td>Secured connection using <strong>TLS</strong></td>
+            </tr>
+        </table>
+
+        <p>Gmail sends a verification code to <code>hello@example.com</code>. Cloudflare forwards it into the inbox
+            you're already sitting in. Paste it back and you're done. The same fields work in Thunderbird, Apple Mail
+            or mutt - Gmail is just the common case.</p>
+
+        <div class="alert">
+            <strong>⚠️ Untick "Treat as an alias",</strong> or Gmail treats the new address as part of your personal
+            account and your real address can show up when people reply.
+        </div>
+
+        <h2>🔐 Step 4: the three records that keep you out of spam</h2>
+
+        <p>Everything so far was plumbing. This part decides inbox versus junk.</p>
+
+        <p>Think of an email like a letter. The <strong>letterhead</strong> is the <code>From:</code> line your reader
+            sees. Anyone can print letterhead, so receivers check the <strong>wax seal</strong> on the envelope
+            instead. Three DNS records make that seal work.</p>
+
+        <h3>SPF - the guest list</h3>
+
+        <p>SPF is one line in DNS naming which services are allowed to send as your domain. The receiver looks it up
+            and checks whether the server that just delivered your message is on the list.</p>
+
+        <p>You get <strong>exactly one</strong> SPF record. Publishing two isn't two lists, it's a permanent error,
+            and receivers trust that less than no record at all. So merge every service into one line:</p>
+
+        <div class="code-block">
+            <pre><code>example.com.  TXT  "v=spf1 include:_spf.mx.cloudflare.net include:spf.brevo.com ~all"</code></pre>
+        </div>
+
+        <div class="alert">
+            <strong>⚠️ It's <code>spf.brevo.com</code>, not <code>_spf.brevo.com</code></strong> - Google and
+            Cloudflare use the underscore, Brevo doesn't. Get it wrong and nothing visibly breaks: your mail still
+            sends, the record just quietly means nothing. Same silent failure if you list more than ten services.
+        </div>
+
+        <h3>DKIM - the wax seal</h3>
+
+        <p>DKIM stamps every message with a signature only someone holding your domain's key can make. The matching
+            public key sits in your DNS, so any receiver can check it. Add the CNAME records your relay gave you and
+            it stamps everything on the way out.</p>
+
+        <p>Here is the part worth reading twice. Every email carries two "from" addresses, and only one of them is on
+            your screen:</p>
+
+        <div class="diagram">
+            <pre class="mermaid">
+sequenceDiagram
+    participant You as Your mailbox
+    participant Brevo as Brevo relay
+    participant Rx as Recipient
+
+    You->>Brevo: compose, From: hello@example.com
+    Note over Brevo: hidden address (for bounces)<br/>= bounce@brevo.com<br/>visible address (letterhead)<br/>= hello@example.com
+    Brevo->>Rx: stamped with your seal, d=example.com
+    Rx->>Rx: SPF checks the HIDDEN one, passes for brevo.com
+    Rx->>Rx: DKIM checks the VISIBLE one, passes for example.com
+    Note over Rx: Only the visible one counts.<br/>DKIM is what carries you.
+            </pre>
+        </div>
+
+        <p>SPF passes, but it passes for <em>Brevo's</em> domain. It says nothing about the letterhead your recipient
+            actually reads. DKIM is the one that lines up.</p>
+
+        <div class="alert alert-success">
+            <strong>Key point:</strong> your mail lands because of DKIM. Break those CNAMEs and everything fails,
+            however tidy your SPF record is.
+        </div>
+
+        <p>This is also why you should ignore the many guides that tell you to put <code>smtp.gmail.com</code> in
+            that SMTP box instead. Gmail can only stamp its own seal:</p>
+
+        <div class="diagram">
+            <pre class="mermaid">
+flowchart LR
+    subgraph good["With Brevo"]
+        A1["Letterhead: example.com<br/>Seal: example.com"] --> A2["Match, delivered"]
+    end
+    subgraph bad["With Gmail's own SMTP"]
+        B1["Letterhead: example.com<br/>Seal: gmail.com"] --> B2["Mismatch, 'via gmail.com'"]
+    end
+            </pre>
+        </div>
+
+        <p>Mismatched, so recipients get the "via gmail.com" tag you were trying to remove in the first place. It
+            looks fine at first because nothing is enforcing the rules yet - see the next record - and then breaks
+            later, when you turn enforcement on.</p>
+
+        <h3>DMARC - your policy</h3>
+
+        <p>DMARC ties the other two together and tells receivers what to do when a message claiming to be you passes
+            neither.</p>
+
+        <div class="code-block">
+            <pre><code>_dmarc.example.com.  TXT  "v=DMARC1; p=none; rua=mailto:dmarc@example.com"</code></pre>
+        </div>
+
+        <p><code>p=none</code> means "monitor only": nothing gets blocked, but reports start arriving at the
+            <code>rua</code> address showing who sends as your domain and whether it checks out. Publish it on day
+            one, read the reports for a few weeks, then tighten.
+        </p>
+
+        <table>
+            <tr>
+                <th>Phase</th>
+                <th>Policy</th>
+                <th>Effect</th>
+            </tr>
+            <tr>
+                <td>Day 1</td>
+                <td><code>p=none</code></td>
+                <td>Monitor only, nothing blocked</td>
+            </tr>
+            <tr>
+                <td>After 2-4 weeks of clean reports</td>
+                <td><code>p=quarantine</code></td>
+                <td>Failing mail goes to spam</td>
+            </tr>
+            <tr>
+                <td>Steady state</td>
+                <td><code>p=reject</code></td>
+                <td>Failing mail is refused outright</td>
+            </tr>
+        </table>
+
+        <p>That last step is where a broken setup finally bites: with Gmail's SMTP and nothing aligned, turning on
+            enforcement sends your own mail to spam. Since Google and Yahoo tightened their rules in 2024, none of
+            this is optional polish anymore.</p>
+
+        <h2>📄 The whole zone, in one place</h2>
+
+        <div class="code-block">
+            <pre><code>example.com.          MX     52  route1.mx.cloudflare.net.   ; priority per dashboard
+example.com.          MX     98  route2.mx.cloudflare.net.
+example.com.          MX     91  route3.mx.cloudflare.net.
+example.com.          TXT    "v=spf1 include:_spf.mx.cloudflare.net include:spf.brevo.com ~all"
+example.com.          TXT    "brevo-code:&lt;code&gt;"
+_dmarc.example.com.   TXT    "v=DMARC1; p=none; rua=mailto:dmarc@example.com"
+brevo1._domainkey     CNAME  b1.&lt;code&gt;.dkim.brevo.com.
+brevo2._domainkey     CNAME  b2.&lt;code&gt;.dkim.brevo.com.
+cf2024-1._domainkey   TXT    &lt;Cloudflare's key, auto-generated&gt;</code></pre>
+        </div>
+
+        <div class="alert">
+            <strong>⚠️ Every mail record is grey cloud, DNS only.</strong> The orange cloud is for websites and will
+            break your mail. Duplicate SPF or DMARC records break it silently.
+        </div>
+
+        <h2>🔍 Step 5: check it before you hand the address out</h2>
+
+        <div class="code-block">
+            <pre><code>dig +short TXT example.com          # should return exactly one SPF line
+dig +short TXT _dmarc.example.com   # should return exactly one DMARC line
+dig +short CNAME brevo1._domainkey.example.com</code></pre>
+        </div>
+
+        <p>Send a message from your new address to <a href="https://www.mail-tester.com" target="_blank"
+                rel="noopener noreferrer">mail-tester.com</a>, which scores it out of 10 and names whatever failed.
+            Below 8, stop and fix. Mail the address from an unrelated account too, to confirm forwarding works the
+            other way.</p>
+
+        <p>Then open your test message in Gmail and click ⋮ → <strong>Show original</strong>:</p>
+
+        <div class="code-block">
+            <pre><code>SPF:   PASS with domain brevo.com        &lt;- fine, expected
+DKIM:  PASS with domain example.com      &lt;- THIS is the one that matters
+DMARC: PASS</code></pre>
+        </div>
+
+        <div class="alert alert-success">
+            <strong>The one check that matters:</strong> if the DKIM line shows the relay's domain instead of yours,
+            your mail is passing by luck, not configuration. Go back and fix the CNAMEs.
+        </div>
+
+        <h2>💰 Cost, limits and alternatives</h2>
+
+        <p>$0 a month. The 300/day limit counts recipients rather than messages, so one email to five people costs
+            five. For a contact address you will never come close.</p>
+
+        <table>
+            <tr>
+                <th>Instead of</th>
+                <th>Options</th>
+            </tr>
+            <tr>
+                <td>Cloudflare receiving</td>
+                <td>Forward Email (open source, no volume cap, works with any DNS host), ImprovMX</td>
+            </tr>
+            <tr>
+                <td>Brevo sending</td>
+                <td>Mailjet 6,000/mo but 200/day, MailerSend 3,000/mo, SMTP2GO 1,000/mo, Resend, Amazon SES (~$0.10
+                    per thousand, sandboxed at first), Postmark (paid, best deliverability)</td>
+            </tr>
+            <tr>
+                <td>All three at once</td>
+                <td>Zoho Mail's free tier hosts the domain itself - five users, no relay needed, but no IMAP</td>
+            </tr>
+            <tr>
+                <td>A real mailbox on the domain</td>
+                <td>Fastmail, Proton, Migadu, Purelymail, a few dollars a month</td>
+            </tr>
+        </table>
+
+        <p>Free tiers move constantly, so check the pricing page rather than this table.</p>
+
+        <p>You outgrow this setup past 300 sends a day, or when you need IMAP, shared inboxes, or to email a mailing
+            list - that last one needs a proper marketing service that handles unsubscribes, not a relay. And if the
+            address feeds a contact form, you are handling other people's personal data: GDPR wants a privacy notice,
+            a retention period you actually enforce, and deletion requests answered within 30 days.</p>
+
+        <h2>✅ Summary</h2>
+
+        <div class="feature-list">
+            <div class="feature-item">
+                <h4>📥 Inbound</h4>
+                <p>Cloudflare Email Routing publishes MX for your domain and forwards to a mailbox you already own</p>
+            </div>
+            <div class="feature-item">
+                <h4>📤 Outbound</h4>
+                <p>A free SMTP relay sends from trusted servers and stamps the message as your domain</p>
+            </div>
+            <div class="feature-item">
+                <h4>🔐 Identity</h4>
+                <p>One merged SPF record, your relay's DKIM keys, and a DMARC record starting at <code>p=none</code>
+                </p>
+            </div>
+            <div class="feature-item">
+                <h4>🔍 Verify</h4>
+                <p>mail-tester above 8, and <strong>Show original</strong> showing DKIM signed by your own domain</p>
+            </div>
+        </div>
+
+        <div class="alert alert-success">
+            <strong>Key Takeaway:</strong> through a shared relay, DKIM is what carries you, not SPF. The envelope
+            sender belongs to the relay, so SPF passes for the relay's domain and only DKIM lines up with the address
+            your recipient actually reads. Get the seal right and everything else follows.
+        </div>
+
+        <div class="reference-section">
+            <h2>📚 References</h2>
+            <ul class="reference-list">
+                <li><a href="https://developers.cloudflare.com/email-routing/postmaster/" target="_blank"
+                        rel="noopener noreferrer">Cloudflare: Email Routing postmaster reference</a></li>
+                <li><a href="https://help.brevo.com/hc/en-us/articles/12163873383186-Authenticate-your-domain-with-Brevo-Brevo-code-DKIM-DMARC"
+                        target="_blank" rel="noopener noreferrer">Brevo: Authenticate your domain (Brevo code, DKIM,
+                        DMARC)</a></li>
+                <li><a href="https://www.brevo.com/free-smtp-server/" target="_blank" rel="noopener noreferrer">Brevo:
+                        free SMTP server, 300 emails per day</a></li>
+                <li><a href="https://autospf.com/blog/configuring-spf-dkim-and-dmarc-for-brevo/" target="_blank"
+                        rel="noopener noreferrer">Configuring SPF, DKIM and DMARC for Brevo</a></li>
+                <li><a href="https://forwardemail.net/en/guides/send-mail-as-gmail-custom-domain" target="_blank"
+                        rel="noopener noreferrer">Gmail "Send mail as" with a custom domain</a></li>
+                <li><a href="https://datatracker.ietf.org/doc/html/rfc7208" target="_blank"
+                        rel="noopener noreferrer">RFC 7208: Sender Policy Framework (SPF)</a></li>
+                <li><a href="https://www.emailtooltester.com/en/blog/free-smtp-servers/" target="_blank"
+                        rel="noopener noreferrer">Free SMTP servers compared</a></li>
+            </ul>
+        </div>
+
+        <a href="index.html" class="back-to-home">← Back to Posts</a>
+
+        <div class="footer">
+            <p id="footer-copyright"></p>
+        </div>
+    </div>
+</body>
+
+</html>

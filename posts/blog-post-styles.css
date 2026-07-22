@@ -473,9 +473,17 @@ tr:nth-child(even) {
     box-shadow: 0 4px 8px rgba(15, 23, 42, 0.2);
 }
 
+/* The listing page is a card grid, not prose, so it gets more room than the
+   900px article measure. Scoped to <body class="posts-index"> only. */
+.posts-index .container {
+    max-width: 1280px;
+}
+
 .posts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    /* Fixed at two columns: auto-fill would drift to three on wide screens.
+       The 768px breakpoint below drops this to a single column. */
+    grid-template-columns: repeat(2, 1fr);
     gap: 30px;
     margin-top: 30px;
 }

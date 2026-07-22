@@ -1,6 +1,14 @@
 // Blog Posts Data - Centralized metadata for all blog posts
 
 const postsData = {
+    "free-domain-email": {
+        "title": "Free Domain Email That Lands in the Inbox",
+        "date": "July 23, 2026",
+        "category": "Engineering, Email Infrastructure",
+        "tags": "Email, DNS, SPF, DKIM, DMARC, Cloudflare, Deliverability",
+        "readingTime": "9 minutes",
+        "slug": "free-domain-email-blog-post"
+    },
     "rate-limiting-feature": {
         "title": "Building a Robust API Rate Limiting System for Multi-Tenant E-Commerce Platform",
         "date": "January 3, 2026",
